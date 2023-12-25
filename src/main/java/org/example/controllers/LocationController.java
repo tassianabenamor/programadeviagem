@@ -1,12 +1,13 @@
 package org.example.controllers;
 
 import org.example.models.Evento;
+import org.example.models.Horarios;
 import org.example.models.Location;
-import spark.Request;
 import spark.Response;
 import static spark.Spark.*;
 import org.example.services.LocationService;
 import com.google.gson.Gson;
+import static spark.Spark.delete;
 
 import java.util.List;
 
@@ -105,32 +106,79 @@ public class LocationController {
             }
         });
 
+        // PUT: Atualizar uma localização existente
         put("/locations/:id", (req, res) -> {
-            String id = req.params(":id");
-            String body = req.body();
-            // Implementar lógica para atualizar uma localização existente com o ID e corpo da requisição
-            return "Localização com ID " + id + " atualizada com os dados: " + body;
+            res.type("application/json");
+            try {
+                int id = Integer.parseInt(req.params(":id"));
+                Location updateData = gson.fromJson(req.body(), Location.class);
+                Location updatedLocation = locationService.updateLocation(id, updateData);
+                return updatedLocation != null ? gson.toJson(updatedLocation) : "Localização não encontrada";
+            } catch (NumberFormatException e) {
+                res.status(400); // Bad Request
+                return "ID inválido";
+            } catch (Exception e) {
+                res.status(500); // Internal Server Error
+                return "Erro ao atualizar localização";
+            }
         });
 
         // PUT: Atualizar os horários de uma localização
         put("/locations/:id/horarios", (req, res) -> {
-            String id = req.params(":id");
-            String body = req.body();
-            // Implementar lógica para atualizar os horários da localização com ID
-            return "Horários da localização com ID " + id + " atualizados com: " + body;
+            res.type("application/json");
+            try {
+                int id = Integer.parseInt(req.params(":id"));
+                // Assumindo que você tem uma classe Horario ou similar
+                Horarios horario = gson.fromJson(req.body(), Horarios.class);
+                Horarios updatedHorario = locationService.updateHorario(id, horario);
+                return updatedHorario != null ? gson.toJson(updatedHorario) : "Horário não encontrado";
+            } catch (NumberFormatException e) {
+                res.status(400); // Bad Request
+                return "ID inválido";
+            } catch (Exception e) {
+                res.status(500); // Internal Server Error
+                return "Erro ao atualizar horário";
+            }
         });
 
+        // DELETE: Deletar uma localização com o ID especificado
         delete("/locations/:id", (req, res) -> {
-            String id = req.params(":id");
-            // Implementar lógica para deletar uma localização com o ID especificado
-            return "Localização com ID " + id + " deletada";
+            try {
+                int id = Integer.parseInt(req.params(":id"));
+                boolean deleted = locationService.deleteLocation(id);
+                if (deleted) {
+                    return "Localização com ID " + id + " deletada";
+                } else {
+                    res.status(404); // Not Found
+                    return "Localização não encontrada";
+                }
+            } catch (NumberFormatException e) {
+                res.status(400); // Bad Request
+                return "ID inválido";
+            } catch (Exception e) {
+                res.status(500); // Internal Server Error
+                return "Erro ao deletar localização";
+            }
         });
 
         // DELETE: Deletar um evento de uma localização
         delete("/locations/eventos/:id", (req, res) -> {
-            String id = req.params(":id");
-            // Implementar lógica para deletar um evento da localização com ID
-            return "Evento com ID " + id + " deletado";
+            try {
+                int id = Integer.parseInt(req.params(":id"));
+                boolean deleted = locationService.deleteEvento(id);
+                if (deleted) {
+                    return "Evento com ID " + id + " deletado";
+                } else {
+                    res.status(404); // Not Found
+                    return "Evento não encontrado";
+                }
+            } catch (NumberFormatException e) {
+                res.status(400); // Bad Request
+                return "ID inválido";
+            } catch (Exception e) {
+                res.status(500); // Internal Server Error
+                return "Erro ao deletar evento";
+            }
         });
     }
 

@@ -1,6 +1,7 @@
 package org.example.services;
 
 import org.example.models.Evento;
+import org.example.models.Horarios;
 import org.example.models.Location;
 import java.util.List;
 import java.util.ArrayList;
@@ -55,16 +56,28 @@ public class LocationService {
     }
 
     // Atualizar uma localização existente
-    public Location updateLocation(int id, Location location) {
-        // Implemente a lógica para atualizar uma localização existente
+    public Location updateLocation(int id, Location updateData) {
+        // Implemente a lógica para atualizar a localização no banco de dados
+        return updateData; // Retorne a localização atualizada
+    }
 
-        return location;
+    // Atualizar os horários de uma localização
+    public Horarios updateHorario(int locationId, Horarios horario) {
+        // Implemente a lógica para atualizar o horário no banco de dados
+        return horario; // Retorne o horário atualizado
     }
 
     // Deletar uma localização
-    public void deleteLocation(int id) {
-        // Implemente a lógica para deletar uma localização
+    public boolean deleteLocation(int id) {
+        // Implemente a lógica para deletar a localização no banco de dados
+        // Retorne true se a localização foi deletada, false se não foi encontrada
+        return true; // Exemplo de retorno
     }
 
-    // Outros métodos conforme necessário, como buscar por nome, categoria, etc.
+    // Deletar um evento
+    public boolean deleteEvento(int id) {
+        // Implemente a lógica para deletar o evento no banco de dados
+        // Retorne true se o evento foi deletado, false se não foi encontrado
+        return true; // Exemplo de retorno
+    }
 }
