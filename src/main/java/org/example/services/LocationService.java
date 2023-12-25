@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.models.Evento;
 import org.example.models.Location;
 import java.util.List;
 import java.util.ArrayList;
@@ -23,18 +24,34 @@ public class LocationService {
 
     // Buscar uma localização específica pelo ID
     public Location getLocationById(int id) {
-        Location location = null;
+        // Implemente a lógica de busca por ID
+        return null; // Exemplo de retorno
+    }
 
-        // Implemente a lógica para buscar uma localização específica por ID
+    // Buscar localizações pelo nome
+    public List<Location> getLocationsByName(String nome) {
+        List<Location> locations = new ArrayList<>();
+        // Implemente a lógica de busca por nome
+        return locations; // Exemplo de retorno
+    }
 
-        return location;
+    // Buscar localizações por categoria
+    public List<Location> getLocationsByCategory(String categoria) {
+        List<Location> locations = new ArrayList<>();
+        // Implemente a lógica de busca por categoria
+        return locations; // Exemplo de retorno
     }
 
     // Criar uma nova localização
     public Location createLocation(Location location) {
-        // Implemente a lógica para criar uma nova localização
+        // Implemente a lógica para salvar a nova localização no banco de dados
+        return location; // Retorne a localização criada
+    }
 
-        return location;
+    // Criar um novo evento em uma localização
+    public Evento createEvento(Evento evento) {
+        // Implemente a lógica para salvar o novo evento no banco de dados
+        return evento; // Retorne o evento criado
     }
 
     // Atualizar uma localização existente

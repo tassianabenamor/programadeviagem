@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import org.example.models.Evento;
 import org.example.models.Location;
 import spark.Request;
 import spark.Response;
@@ -34,37 +35,74 @@ public class LocationController {
             }
         });
 
+        // GET: Buscar uma localização específica pelo ID
         get("/locations/:id", (req, res) -> {
-            String id = req.params(":id");
-            // Implementar lógica para retornar uma localização específica
-            return "Detalhes da localização com ID: " + id;
+            res.type("application/json");
+            try {
+                int id = Integer.parseInt(req.params(":id"));
+                Location location = locationService.getLocationById(id);
+                return location != null ? gson.toJson(location) : "Localização não encontrada";
+            } catch (NumberFormatException e) {
+                res.status(400); // Bad Request
+                return "ID inválido";
+            } catch (Exception e) {
+                res.status(500); // Internal Server Error
+                return "Erro ao buscar localização";
+            }
         });
 
         // GET: Buscar localizações pelo nome
         get("/locations/nome/:nome", (req, res) -> {
-            String nome = req.params(":nome");
-            // Implementar lógica para retornar localizações pelo nome
-            return "Localizações com o nome: " + nome;
+            res.type("application/json");
+            try {
+                String nome = req.params(":nome");
+                List<Location> locations = locationService.getLocationsByName(nome);
+                return gson.toJson(locations);
+            } catch (Exception e) {
+                res.status(500); // Internal Server Error
+                return "Erro ao buscar localizações por nome";
+            }
         });
 
         // GET: Buscar localizações por categoria
         get("/locations/categoria/:categoria", (req, res) -> {
-            String categoria = req.params(":categoria");
-            // Implementar lógica para retornar localizações por categoria
-            return "Localizações na categoria: " + categoria;
+            res.type("application/json");
+            try {
+                String categoria = req.params(":categoria");
+                List<Location> locations = locationService.getLocationsByCategory(categoria);
+                return gson.toJson(locations);
+            } catch (Exception e) {
+                res.status(500); // Internal Server Error
+                return "Erro ao buscar localizações por categoria";
+            }
         });
 
+        // POST: Criar uma nova localização
         post("/locations", (req, res) -> {
-            String body = req.body();
-            // Implementar lógica para criar uma nova localização com o corpo da requisição
-            return "Nova localização criada com os dados: " + body;
+            res.type("application/json");
+            try {
+                Location newLocation = gson.fromJson(req.body(), Location.class);
+                Location createdLocation = locationService.createLocation(newLocation);
+                res.status(201); // HTTP 201 Created
+                return gson.toJson(createdLocation);
+            } catch (Exception e) {
+                res.status(500); // Internal Server Error
+                return "Erro ao criar localização: " + e.getMessage();
+            }
         });
 
         // POST: Criar um novo evento em uma localização
         post("/locations/eventos", (req, res) -> {
-            String body = req.body();
-            // Implementar lógica para criar um novo evento com o corpo da requisição
-            return "Novo evento criado com os dados: " + body;
+            res.type("application/json");
+            try {
+                Evento newEvento = gson.fromJson(req.body(), Evento.class);
+                Evento createdEvento = locationService.createEvento(newEvento);
+                res.status(201); // HTTP 201 Created
+                return gson.toJson(createdEvento);
+            } catch (Exception e) {
+                res.status(500); // Internal Server Error
+                return "Erro ao criar evento: " + e.getMessage();
+            }
         });
 
         put("/locations/:id", (req, res) -> {
