@@ -1,15 +1,37 @@
 package org.example.controllers;
 
+import org.example.models.Location;
 import spark.Request;
 import spark.Response;
 import static spark.Spark.*;
+import org.example.services.LocationService;
+import com.google.gson.Gson;
+
+import java.util.List;
+
 
 public class LocationController {
 
+    private LocationService locationService;
+    private Gson gson;
+
     public LocationController() {
+        locationService = new LocationService(); // Serviço que interage com o banco de dados
+        gson = new Gson(); // Instância do Gson para converter objetos em JSON
+
         get("/locations", (req, res) -> {
-            // Implementar lógica para retornar todas as localizações
-            return "Lista de todas as localizações";
+            res.type("application/json"); // Define o tipo de conteúdo da resposta como JSON
+
+            try {
+                // Busca todas as localizações usando o serviço
+                List<Location> locations = locationService.getAllLocations();
+
+                // Converte a lista de localizações para JSON
+                return gson.toJson(locations);
+            } catch (Exception e) {
+                res.status(500); // Erro interno do servidor
+                return gson.toJson("Erro ao buscar localizações: " + e.getMessage());
+            }
         });
 
         get("/locations/:id", (req, res) -> {
